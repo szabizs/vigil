@@ -1,0 +1,15 @@
+{
+    "main": "src/agent.php",
+    "output": "build/agent.phar",
+    "alias": "agent.phar",
+    "banner": "The Vigil relay agent. Built from materom/vigil agent/; see agent/build.sh.",
+    "files": ["bootstrap.php"],
+    "force-autodiscovery": true,
+    "compactors": [
+        "KevinGH\\Box\\Compactor\\Php",
+        "KevinGH\\Box\\Compactor\\PhpScoper"
+    ],
+    "php-scoper": "scoper.inc.php",
+    "check-requirements": false,
+    "timestamp": "2026-01-01 00:00:00"
+}

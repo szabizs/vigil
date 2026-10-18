@@ -1,0 +1,16 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "global_namespace_import": {
+            "import_classes": true,
+            "import_constants": true,
+            "import_functions": true
+        },
+        "fully_qualified_strict_types": false,
+        "native_function_invocation": false
+    },
+    "exclude": [
+        "agent/vendor",
+        "agent/build"
+    ]
+}

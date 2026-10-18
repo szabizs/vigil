@@ -1,0 +1,40 @@
+<?php
+
+/*
+ * Health check of a running Vigil relay: sends a framed PING to VIGIL_INGEST_URI and expects `2:OK`.
+ * Used by the Docker HEALTHCHECK; `php artisan vigil:status` does the same from inside an application.
+ */
+
+$token = (string) ($_SERVER['VIGIL_TOKEN'] ?? getenv('VIGIL_TOKEN') ?: '');
+$uri = (string) ($_SERVER['VIGIL_INGEST_URI'] ?? getenv('VIGIL_INGEST_URI') ?: '127.0.0.1:2407');
+$uri = str_replace('0.0.0.0', '127.0.0.1', $uri);
+$timeout = (float) ($_SERVER['VIGIL_INGEST_TIMEOUT'] ?? getenv('VIGIL_INGEST_TIMEOUT') ?: 0.5);
+
+$fail = static function (string $message): never {
+    fwrite(STDERR, date('Y-m-d H:i:s').' [ERROR] '.$message.PHP_EOL);
+
+    exit(1);
+};
+
+if ($token === '') {
+    $fail('The VIGIL_TOKEN environment variable has not been configured');
+}
+
+$stream = @stream_socket_client("tcp://{$uri}", $errorCode, $errorMessage, $timeout);
+
+if ($stream === false) {
+    $fail("Failed connecting to the relay: {$errorMessage} [{$errorCode}]");
+}
+
+$payload = 'v1:'.substr(hash('xxh128', $token), 0, 7).':PING';
+
+stream_set_timeout($stream, (int) $timeout, (int) (($timeout - (int) $timeout) * 1000000));
+fwrite($stream, strlen($payload).':'.$payload);
+$response = (string) fread($stream, 4);
+fclose($stream);
+
+if ($response !== '2:OK') {
+    $fail("Unexpected response from the relay [{$response}]");
+}
+
+fwrite(STDOUT, date('Y-m-d H:i:s').' [INFO] The Vigil relay is running and accepting connections'.PHP_EOL);

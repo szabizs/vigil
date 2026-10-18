@@ -1,0 +1,4 @@
+materom/vigil is derived from laravel/nightwatch 1.30.1 (https://github.com/laravel/nightwatch),
+Copyright (c) Taylor Otwell, released under the MIT License. The original copyright notice is
+retained in LICENSE.md. The local agent (agent.phar), its Docker build and the Boost skill were
+removed; the namespace, facade, config file and environment variables were renamed.

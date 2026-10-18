@@ -1,0 +1,19 @@
+# systemd unit for the Vigil relay agent.
+# Copy to /etc/systemd/system/vigil-agent.service, adjust paths and user, then:
+#   systemctl daemon-reload && systemctl enable --now vigil-agent
+[Unit]
+Description=Vigil relay agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=www-data
+WorkingDirectory=/var/www/app/current
+ExecStart=/usr/bin/php artisan vigil:agent
+Restart=always
+RestartSec=2
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

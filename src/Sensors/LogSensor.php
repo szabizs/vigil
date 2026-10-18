@@ -1,0 +1,49 @@
+<?php
+
+namespace Materom\Vigil\Sensors;
+
+use Materom\Vigil\State\CommandState;
+use Materom\Vigil\State\RequestState;
+use Materom\Vigil\Types\Str;
+use Monolog\LogRecord;
+
+use function json_encode;
+
+/**
+ * @internal
+ */
+final class LogSensor
+{
+    public function __construct(
+        private RequestState|CommandState $executionState,
+    ) {
+        //
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function __invoke(LogRecord $record): array
+    {
+        $this->executionState->logs++;
+
+        return [
+            'v' => 1,
+            't' => 'log',
+            'timestamp' => (float) $record->datetime->format('U.u'),
+            'deploy' => $this->executionState->deploy,
+            'server' => $this->executionState->server,
+            'trace_id' => $this->executionState->trace,
+            'execution_source' => $this->executionState->source,
+            'execution_id' => $this->executionState->id(),
+            'execution_preview' => $this->executionState->executionPreview(),
+            'execution_stage' => $this->executionState->stage,
+            'user' => $this->executionState->user->id(),
+            // --- //
+            'level' => Str::tinyText($record->level->toPsrLogLevel()),
+            'message' => Str::text($record->message),
+            'context' => Str::text(json_encode((object) $record->context, flags: JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRESERVE_ZERO_FRACTION | JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)),
+            'extra' => Str::text(json_encode((object) $record->extra, flags: JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRESERVE_ZERO_FRACTION | JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)),
+        ];
+    }
+}

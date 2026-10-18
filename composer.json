@@ -1,0 +1,85 @@
+{
+    "name": "materom/vigil",
+    "description": "Vigil telemetry client for Laravel: collects requests, queries, exceptions, jobs, commands and more and ships them to the self-hosted Vigil monitoring product. Derived from laravel/nightwatch.",
+    "keywords": [
+        "laravel",
+        "monitoring",
+        "telemetry",
+        "vigil"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Materom",
+            "email": "zsoldos@materom.ro"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-zlib": "*",
+        "guzzlehttp/promises": "^2.0|^3.0",
+        "laravel/framework": "^10.0|^11.0|^12.0|^13.0",
+        "monolog/monolog": "^3.6",
+        "nesbot/carbon": "^2.0|^3.0",
+        "psr/http-message": "^1.0|^2.0",
+        "psr/log": "^1.0|^2.0|^3.0",
+        "ramsey/uuid": "^4.0",
+        "symfony/console": "^6.0|^7.0|^8.0",
+        "symfony/http-foundation": "^6.0|^7.0|^8.0",
+        "symfony/polyfill-php84": "^1.29"
+    },
+    "require-dev": {
+        "ext-pdo": "*",
+        "guzzlehttp/guzzle": "^7.0",
+        "guzzlehttp/psr7": "^2.0",
+        "laravel/pint": "^1.13",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^8.0",
+        "pestphp/pest": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Materom\\Vigil\\": "src/"
+        },
+        "files": [
+            "src/Support/streams.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Materom\\Vigil\\Tests\\": "tests/",
+            "Materom\\VigilAgent\\": "agent/src/"
+        }
+    },
+    "scripts": {
+        "test": "@php vendor/bin/pest",
+        "lint": "@php vendor/bin/pint"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Materom\\Vigil\\VigilServiceProvider"
+            ],
+            "aliases": {
+                "Vigil": "Materom\\Vigil\\Facades\\Vigil"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "audit": {
+            "block-insecure": false
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "archive": {
+        "exclude": [
+            "/agent/vendor",
+            "/tests"
+        ]
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "name": "materom/vigil-agent",
+    "description": "The Vigil relay agent: a local daemon that spools telemetry frames to disk and ships them to the Vigil product over HTTPS. Built into agent/build/agent.phar.",
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "ext-zlib": "*",
+        "react/event-loop": "^1.5",
+        "react/http": "^1.11",
+        "react/promise": "^3.2",
+        "react/socket": "^1.16",
+        "react/stream": "^1.4"
+    },
+    "require-dev": {
+        "humbug/box": "^4.6",
+        "humbug/php-scoper": "^0.18"
+    },
+    "autoload": {
+        "psr-4": {
+            "Materom\\VigilAgent\\": "src/"
+        },
+        "exclude-from-classmap": [
+            "src/agent.php"
+        ]
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.0"
+        },
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "classmap-authoritative": false,
+        "audit": {
+            "block-insecure": false
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

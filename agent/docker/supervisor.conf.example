@@ -1,0 +1,20 @@
+; Supervisor program for the Vigil relay agent, one per application server.
+; Copy to /etc/supervisor/conf.d/vigil-agent.conf, adjust paths and user, then:
+;   supervisorctl reread && supervisorctl update && supervisorctl status vigil-agent
+;
+; The relay exits on its own after a deploy replaced agent.phar (signature change) or the client's payload
+; version changed; autorestart brings it back on the new code. stopwaitsecs must exceed VIGIL_AGENT_DRAIN_SECONDS
+; so the final upload round can finish before supervisor sends SIGKILL.
+[program:vigil-agent]
+command=php /var/www/app/current/artisan vigil:agent
+directory=/var/www/app/current
+user=www-data
+autostart=true
+autorestart=true
+startsecs=3
+stopsignal=TERM
+stopwaitsecs=30
+stdout_logfile=/var/www/app/shared/storage/logs/vigil-agent.log
+stdout_logfile_maxbytes=20MB
+stdout_logfile_backups=5
+redirect_stderr=true
