@@ -19,6 +19,35 @@ composer require materom/vigil
 
 The service provider and the `Vigil` facade alias are auto-discovered (`extra.laravel` in the package's `composer.json`). Nothing needs registering.
 
+### From the private GitHub repository (recommended)
+
+The package is published as the private repository `https://github.com/szabizs/vigil` and versioned with tags (`v0.1.0`, …). Add it as a VCS repository and require a tagged version:
+
+```json
+"repositories": [
+    { "type": "vcs", "url": "https://github.com/szabizs/vigil" }
+],
+"require": {
+    "materom/vigil": "^0.1"
+}
+```
+
+Composer needs read access to the repository on every machine that runs `composer install` (developer machines, build agents, servers). Create a GitHub **fine-grained personal access token** (Settings → Developer settings → Fine-grained tokens) with *Repository access: only `szabizs/vigil`* and *Permissions → Contents: Read-only*, then store it once per machine, outside the project:
+
+```bash
+composer config --global github-oauth.github.com <token>
+```
+
+Alternatively give a server a deploy key and use the SSH URL `git@github.com:szabizs/vigil.git` in the repository entry. Never commit the token; `composer.json` holds only the URL.
+
+Then:
+
+```bash
+composer require materom/vigil:^0.1
+```
+
+Upgrades are deliberate: `composer update materom/vigil` moves to the newest tag allowed by the constraint.
+
 ### From a local checkout or monorepo (path repository)
 
 When the package lives next to your application, for example in `../vigil`, add a path repository to the application's `composer.json`:
